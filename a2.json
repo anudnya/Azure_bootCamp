@@ -11,12 +11,14 @@
         },
         "adminUsername": {
             "type": "string",
+             "defaultValue": "anudnya",
             "metadata": {
                 "description": "Default Admin username"
             }
         },
         "adminPassword": {
             "type": "securestring",
+            "defaultValue": "anudnya@24680",
             "metadata": {
                 "description": "Default Admin password"
             }
@@ -34,6 +36,7 @@
         },
         "baseResourceName": {
             "type": "string",
+            "defaultValue": "rswebapp",
             "metadata": {
                 "description": "Name of the resource for webapp"
             },
