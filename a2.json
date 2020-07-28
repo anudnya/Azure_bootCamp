@@ -18,6 +18,7 @@
         },
         "adminPassword": {
             "type": "securestring",
+            "defaultValue": "Anudnya@24680",
             "metadata": {
                 "description": "Default Admin password"
             }
