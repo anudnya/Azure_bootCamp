@@ -18,7 +18,7 @@
         },
         "adminPassword": {
             "type": "securestring",
-            "defaultValue": "Anudnya@24680",
+            "defaultValue": "anudnya@24680",
             "metadata": {
                 "description": "Default Admin password"
             }
@@ -348,12 +348,12 @@
             "properties": {
                 "securityRules": [
                     {
-                      "name": "SSH",
+                      "name": "RDP",
                       "properties": {
-                        "description": "Allows SSH traffic",
+                        "description": "Allows ssh traffic",
                         "protocol": "Tcp",
                         "sourcePortRange": "*",
-                        "destinationPortRange": "22",
+                        "destinationPortRange": "3389",
                         "sourceAddressPrefix": "*",
                         "destinationAddressPrefix": "*",
                         "access": "Allow",
@@ -371,13 +371,13 @@
             "properties": {
                 "securityRules": [
                     {
-                      "name": "SSH",
+                      "name": "RDP",
                       "properties": {
-                        "description": "Allows SSH traffic",
+                        "description": "Allows RDP traffic",
                         "protocol": "Tcp",
-                        "sourcePortRange": "192.168.1.0/24",
-                        "destinationPortRange": "22",
-                        "sourceAddressPrefix": "*",
+                        "sourcePortRange": "*",
+                        "destinationPortRange": "3389",
+                        "sourceAddressPrefix": "192.168.1.0/24",
                         "destinationAddressPrefix": "*",
                         "access": "Allow",
                         "priority": 100,
@@ -394,13 +394,13 @@
                 "properties": {
                     "securityRules": [
                         {
-                          "name": "SSH",
+                          "name": "RDP",
                           "properties": {
                             "description": "Allows SSH traffic",
                             "protocol": "Tcp",
-                            "sourcePortRange": "192.168.1.0/24",
-                            "destinationPortRange": "22",
-                            "sourceAddressPrefix": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "192.168.1.0/24",
                             "destinationAddressPrefix": "*",
                             "access": "Allow",
                             "priority": 100,
@@ -647,7 +647,7 @@
                       "id": "[concat(variables('applicationGatewayID'), '/httpListeners/appGatewayHttpListener')]"
                     },
                     "backendAddressPool": {
-                      "id": "https://rswebappportal.azurewebsites.net"
+                      "id": "[concat(variables('applicationGatewayID'), '/backendAddressPools/appGatewayBackendPool')]"
                     },
                     "backendHttpSettings": {
                       "id": "[concat(variables('applicationGatewayID'), '/backendHttpSettingsCollection/appGatewayBackendHttpSettings')]"
