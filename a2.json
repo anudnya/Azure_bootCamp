@@ -104,13 +104,7 @@
             "metadata": {
               "description": "IP Address for Backend Server 1"
             }
-          },
-          "backendIpAddress2": {
-            "type": "string",
-            "defaultValue": "10.0.1.11",
-            "metadata": {
-              "description": "IP Address for Backend Server 2"
-            }
+    
           },
           "wafEnabled": {
             "type": "bool",
@@ -604,11 +598,9 @@
                   "properties": {
                     "BackendAddresses": [
                       {
-                        "IpAddress": "[parameters('backendIpAddress1')]"
-                      },
-                      {
-                        "IpAddress": "[parameters('backendIpAddress2')]"
+                        "IpAddress": "rswebappportal.azurewebsites.net"
                       }
+
                     ]
                   }
                 }
@@ -619,7 +611,9 @@
                   "properties": {
                     "Port": 80,
                     "Protocol": "Http",
-                    "CookieBasedAffinity": "Disabled"
+                    "CookieBasedAffinity": "Disabled",
+                    "pickHostNameFromBackendAddress": false,
+                    "requestTimeout": 30
                   }
                 }
               ],
