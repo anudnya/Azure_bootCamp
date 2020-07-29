@@ -275,7 +275,30 @@
                         "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName')), '2017-06-01').primaryEndpoints['blob']]"
                     }
                 }
-            }
+            },
+            "resources": [
+              {
+                "type": "extensions",
+                "name": "CustomScriptExtension",
+                "apiVersion": "2017-03-30",
+                "location": "[parameters('location')]",
+                "dependsOn": [
+                  "[variables('vmName')]"
+                ],
+                "properties": {
+                  "publisher": "Microsoft.Compute",
+                  "type": "CustomScriptExtension",
+                  "typeHandlerVersion": "1.8",
+                  "autoUpgradeMinorVersion": true,
+                  "settings": {
+                    "fileUris": [
+                      "[uri(parameters('_artifactsLocation'), concat(variables('ScriptFileName'), parameters('_artifactsLocationSasToken')))]"
+                    ],
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('scriptFolder'), '/', variables('scriptFileName'), ' ', variables('scriptParameters'))]"
+                  }
+                }
+              }
+            ]
         },
         {            "name": "[variables('virtualMachineName3')]",
             "type": "Microsoft.Compute/virtualMachines",
@@ -370,7 +393,7 @@
                         "description": "Allows RDP traffic",
                         "protocol": "Tcp",
                         "sourcePortRange": "*",
-                        "destinationPortRange": "3389",
+                        "destinationPortRange": "*",
                         "sourceAddressPrefix": "192.168.1.0/24",
                         "destinationAddressPrefix": "*",
                         "access": "Allow",
@@ -393,7 +416,7 @@
                             "description": "Allows SSH traffic",
                             "protocol": "Tcp",
                             "sourcePortRange": "*",
-                            "destinationPortRange": "3389",
+                            "destinationPortRange": "*",
                             "sourceAddressPrefix": "192.168.1.0/24",
                             "destinationAddressPrefix": "*",
                             "access": "Allow",
@@ -657,9 +680,7 @@
                 "disabledRuleGroups": []
               }
             }
-          }
-
-        ,
+          },
         {
             "apiVersion": "2017-08-01",
             "type": "Microsoft.Web/serverfarms",
