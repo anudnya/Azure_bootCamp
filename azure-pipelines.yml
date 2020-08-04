@@ -1,0 +1,32 @@
+# Starter pipeline
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Free Trial(1)(72b0c16c-df66-4f6c-8293-1c1921fdcad3)'
+    subscriptionId: '72b0c16c-df66-4f6c-8293-1c1921fdcad3'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'AnudnyaRG'
+    location: 'East US'
+    templateLocation: 'URL of the file'
+    csmParametersFileLink: 'https://raw.githubusercontent.com/anudnya/Azure_bootCamp/master/a2.json'
+    deploymentMode: 'Incremental'
+    deploymentName: 'Infra Deployment'
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
