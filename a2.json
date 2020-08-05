@@ -243,7 +243,7 @@
         {   "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2019-11-01",
             "name": "[parameters('publicipname')]",
-            "location": "[parameters('location')]",
+            "location": "resourcegroup.location",
             "sku": {
                 "name": "Standard"
             },
@@ -256,7 +256,7 @@
         {   "type": "Microsoft.Network/publicIPPrefixes",
             "apiVersion": "2019-11-01",
             "name": "[parameters('publicipprefixname')]",
-            "location": "[parameters('location')]",
+            "location": "resourcegroup.location",
             "sku": {
                 "name": "Standard"
             },
@@ -268,7 +268,7 @@
         {    "type": "Microsoft.Network/natGateways",
             "apiVersion": "2019-11-01",
             "name": "[parameters('natgatewayname')]",
-            "location": "[parameters('location')]",
+            "location": "resourcegroup.location",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicipname'))]",
                 "[resourceId('Microsoft.Network/publicIPPrefixes', parameters('publicipprefixname'))]"
@@ -295,7 +295,7 @@
       { "name": "[variables('virtualMachineName1')]",
         "type": "Microsoft.Compute/virtualMachines",
         "apiVersion": "2017-03-30",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "comments": "This is the virtual machine that you're building.",
         "dependsOn": [
           "[variables('nic1')]",
@@ -452,7 +452,7 @@
       { "type": "Microsoft.Network/networkSecurityGroups",
         "apiVersion": "2019-08-01",
         "name": "[variables('networkSecurityGroupName1')]",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "properties": {
           "securityRules": [
             {
@@ -498,7 +498,7 @@
       { "type": "Microsoft.Network/networkSecurityGroups",
         "apiVersion": "2019-08-01",
         "name": "[variables('networkSecurityGroupName3')]",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "properties": {
           "securityRules": [
             {
@@ -521,7 +521,7 @@
       { "type": "Microsoft.Network/virtualNetworks",
         "name": "[variables('virtualNetworkName')]",
         "apiVersion": "2017-06-01",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "dependsOn": [
           "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName1'))]",
           "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName2'))]",
@@ -577,7 +577,7 @@
       { "name": "[variables('nic1')]",
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2017-06-01",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "comments": "This will be your Primary NIC",
         "dependsOn": [
           "[variables('publicIpAddress')]",
@@ -604,7 +604,7 @@
       { "name": "[variables('nic2')]",
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2017-06-01",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "comments": "This will be your NIC for ad subnet",
         "dependsOn": [
           "[variables('networkSecurityGroupName2')]",
@@ -627,7 +627,7 @@
       { "name": "[variables('nic3')]",
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2017-06-01",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "comments": "This will be your Secondary NIC",
         "dependsOn": [
           "[variables('networkSecurityGroupName3')]",
@@ -650,7 +650,7 @@
       { "name": "[variables('publicIpAddress')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "2017-06-01",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "comments": "Public IP for your Primary NIC",
         "properties": {
           "publicIPAllocationMethod": "Dynamic"
@@ -659,7 +659,7 @@
       { "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "2019-04-01",
         "name": "[variables('publicIPAddressName')]",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "sku": {
           "name": "Standard"
         },
@@ -670,7 +670,7 @@
       { "type": "Microsoft.Network/applicationGateways",
         "apiVersion": "2019-04-01",
         "name": "[variables('applicationGatewayName')]",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "dependsOn": [
           "[variables('virtualNetworkName')]",
           "[variables('publicIPAddressName')]"
@@ -776,7 +776,7 @@
       },
       { "name": "[variables('sqlserverName')]",
         "type": "Microsoft.Sql/servers",
-        "location": "[parameters('location')]",
+        "location": "resourcegroup.location",
         "tags": {
           "displayName": "SqlServer"
         },
@@ -790,7 +790,7 @@
           {
             "name": "[variables('databaseName')]",
             "type": "databases",
-            "location": "[parameters('location')]",
+            "location": "resourcegroup.location",
             "tags": {
               "displayName": "Database"
             },
@@ -811,7 +811,7 @@
             "dependsOn": [
               "[variables('sqlserverName')]"
             ],
-            "location": "[parameters('location')]",
+            "location": "resourcegroup.location",
             "name": "AllowAllWindowsAzureIps",
             "properties": {
               "endIpAddress": "0.0.0.0",
@@ -823,7 +823,7 @@
       { "type": "Microsoft.Web/serverfarms",
         "apiVersion": "2018-02-01",
         "name": "[variables('hostingPlanName')]",
-                 "location": "[parameters('location')]",
+                 "location": "resourcegroup.location",
         "tags": {
           "displayName": "HostingPlan"
         },
@@ -838,7 +838,7 @@
       { "type": "Microsoft.Web/sites",
         "apiVersion": "2018-02-01",
         "name": "[variables('webSiteName')]",
-             "location": "[parameters('location')]",
+             "location": "resourcegroup.location",
         "dependsOn": [
           "[variables('hostingPlanName')]"
         ],
@@ -870,7 +870,7 @@
       { "type": "Microsoft.Insights/components",
         "apiVersion": "2018-05-01-preview",
         "name": "[concat('AppInsights', variables('webSiteName'))]",
-                  "location": "[parameters('location')]",
+                  "location": "resourcegroup.location",
         "dependsOn": [
           "[variables('webSiteName')]"
         ],
