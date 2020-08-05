@@ -744,7 +744,7 @@
                   "pickHostNameFromBackendAddress": true,
                   "requestTimeout": 30,
                   "probe": {
-                      "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_applicationGateway1_name')), '/probes/abchealthprobe')]"
+                      "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variable('applicationGatewayName')), '/probes/abchealthprobe')]"
                   }
               }
           }
