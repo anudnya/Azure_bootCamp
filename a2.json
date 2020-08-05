@@ -207,7 +207,11 @@
         "metadata": {
           "description": "The password of the admin user of the SQL Server"
         }
-      }
+      },
+      "applicationGatewayName": {
+        "defaultValue": "applicationGateway1",
+        "type": "String"
+    }
     },
     "variables": {
       "hostingPlanName": "[concat('hostingplan', uniqueString(resourceGroup().id))]",
@@ -232,12 +236,12 @@
       "networkSecurityGroupName1": "[concat(variables('subnet1Name'), '-nsg')]",
       "networkSecurityGroupName2": "[concat(variables('subnet2Name'), '-nsg')]",
       "networkSecurityGroupName3": "[concat(variables('subnet3Name'), '-nsg')]",
-      "applicationGatewayName": "applicationGateway1",
+     
       "publicIPAddressName": "publicIpgateway",
       "subnetName": "appGatewaySubnet",
       "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets/', variables('virtualNetworkName'), variables('subnetName'))]",
       "publicIPRef": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
-      "applicationGatewayID": "[resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName'))]"
+      "applicationGatewayID": "[resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName'))]"
     },
     "resources": [
         {   "type": "Microsoft.Network/publicIPAddresses",
@@ -669,7 +673,7 @@
       },
       { "type": "Microsoft.Network/applicationGateways",
         "apiVersion": "2019-04-01",
-        "name": "[variables('applicationGatewayName')]",
+        "name": "[parameters('applicationGatewayName')]",
         "location": "[parameters('location')]",
         "dependsOn": [
           "[variables('virtualNetworkName')]",
@@ -744,7 +748,7 @@
                   "pickHostNameFromBackendAddress": true,
                   "requestTimeout": 30,
                   "probe": {
-                      "id": "[concat(resourceId('Microsoft.Network/applicationGateways', variable('applicationGatewayName')), '/probes/abchealthprobe')]"
+                      "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGatewayName')), '/probes/abchealthprobe')]"
                   }
               }
           }
