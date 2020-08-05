@@ -243,7 +243,7 @@
         {   "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2019-11-01",
             "name": "[parameters('publicipname')]",
-            "location": "resourcegroup.location",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Standard"
             },
@@ -256,7 +256,7 @@
         {   "type": "Microsoft.Network/publicIPPrefixes",
             "apiVersion": "2019-11-01",
             "name": "[parameters('publicipprefixname')]",
-            "location": "resourcegroup.location",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Standard"
             },
@@ -268,7 +268,7 @@
         {    "type": "Microsoft.Network/natGateways",
             "apiVersion": "2019-11-01",
             "name": "[parameters('natgatewayname')]",
-            "location": "resourcegroup.location",
+            "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicipname'))]",
                 "[resourceId('Microsoft.Network/publicIPPrefixes', parameters('publicipprefixname'))]"
@@ -295,7 +295,7 @@
       { "name": "[variables('virtualMachineName1')]",
         "type": "Microsoft.Compute/virtualMachines",
         "apiVersion": "2017-03-30",
-        "location": "resourcegroup.location",
+        "location": "[resourceGroup().location]",
         "comments": "This is the virtual machine that you're building.",
         "dependsOn": [
           "[variables('nic1')]",
@@ -452,7 +452,7 @@
       { "type": "Microsoft.Network/networkSecurityGroups",
         "apiVersion": "2019-08-01",
         "name": "[variables('networkSecurityGroupName1')]",
-        "location": "resourcegroup.location",
+        "location": "[resourceGroup().location]",
         "properties": {
           "securityRules": [
             {
@@ -498,7 +498,7 @@
       { "type": "Microsoft.Network/networkSecurityGroups",
         "apiVersion": "2019-08-01",
         "name": "[variables('networkSecurityGroupName3')]",
-        "location": "resourcegroup.location",
+        "location": "[resourceGroup().location]",
         "properties": {
           "securityRules": [
             {
@@ -521,7 +521,7 @@
       { "type": "Microsoft.Network/virtualNetworks",
         "name": "[variables('virtualNetworkName')]",
         "apiVersion": "2017-06-01",
-        "location": "resourcegroup.location",
+        "location": "[resourceGroup().location]",
         "dependsOn": [
           "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName1'))]",
           "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName2'))]",
@@ -577,7 +577,7 @@
       { "name": "[variables('nic1')]",
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2017-06-01",
-        "location": "resourcegroup.location",
+        "location": "[resourceGroup().location]",
         "comments": "This will be your Primary NIC",
         "dependsOn": [
           "[variables('publicIpAddress')]",
@@ -604,7 +604,7 @@
       { "name": "[variables('nic2')]",
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2017-06-01",
-        "location": "resourcegroup.location",
+        "location": "[resourceGroup().location]",
         "comments": "This will be your NIC for ad subnet",
         "dependsOn": [
           "[variables('networkSecurityGroupName2')]",
@@ -627,7 +627,7 @@
       { "name": "[variables('nic3')]",
         "type": "Microsoft.Network/networkInterfaces",
         "apiVersion": "2017-06-01",
-        "location": "resourcegroup.location",
+        "location": "[resourceGroup().location]",
         "comments": "This will be your Secondary NIC",
         "dependsOn": [
           "[variables('networkSecurityGroupName3')]",
@@ -650,7 +650,7 @@
       { "name": "[variables('publicIpAddress')]",
         "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "2017-06-01",
-        "location": "resourcegroup.location",
+        "location": "[resourceGroup().location]",
         "comments": "Public IP for your Primary NIC",
         "properties": {
           "publicIPAllocationMethod": "Dynamic"
@@ -659,7 +659,7 @@
       { "type": "Microsoft.Network/publicIPAddresses",
         "apiVersion": "2019-04-01",
         "name": "[variables('publicIPAddressName')]",
-        "location": "resourcegroup.location",
+        "location": "[resourceGroup().location]",
         "sku": {
           "name": "Standard"
         },
@@ -670,16 +670,16 @@
       { "type": "Microsoft.Network/applicationGateways",
         "apiVersion": "2019-04-01",
         "name": "[variables('applicationGatewayName')]",
-        "location": "resourcegroup.location",
+        "location": "[resourceGroup().location]",
         "dependsOn": [
           "[variables('virtualNetworkName')]",
           "[variables('publicIPAddressName')]"
         ],
         "properties": {
           "sku": {
-            "name": "[parameters('applicationGatewaySize')]",
+            "name": "WAF_v2",
             "tier": "WAF_v2",
-            "capacity": "[parameters('applicationGateWayCapacity')]"
+            "capacity": 2
           },
           "gatewayIPConfigurations": [
             {
@@ -691,10 +691,13 @@
               }
             }
           ],
+          "sslCertificates": [],
+          "trustedRootCertificates": [],
           "frontendIPConfigurations": [
             {
               "name": "appGatewayFrontendIP",
               "properties": {
+                "privateIPAllocationMethod": "Dynamic",
                 "PublicIPAddress": {
                   "id": "[variables('publicIPRef')]"
                 }
@@ -728,10 +731,23 @@
                 "Port": 80,
                 "Protocol": "Http",
                 "CookieBasedAffinity": "Disabled",
-                "pickHostNameFromBackendAddress": false,
-                "requestTimeout": 30
+                "pickHostNameFromBackendAddress": true,
+                "requestTimeout": 20
               }
-            }
+            },
+            {
+              "name": "appGatewayBackendHttpSettings",
+              "properties": {
+                  "port": 443,
+                  "protocol": "Https",
+                  "cookieBasedAffinity": "Disabled",
+                  "pickHostNameFromBackendAddress": true,
+                  "requestTimeout": 30,
+                  "probe": {
+                      "id": "[concat(resourceId('Microsoft.Network/applicationGateways', parameters('applicationGateways_applicationGateway1_name')), '/probes/abchealthprobe')]"
+                  }
+              }
+          }
           ],
           "httpListeners": [
             {
@@ -743,11 +759,13 @@
                 "FrontendPort": {
                   "Id": "[concat(variables('applicationGatewayID'), '/frontendPorts/appGatewayFrontendPort')]"
                 },
-                "Protocol": "Http",
-                "SslCertificate": null
+                "protocol": "Http",
+                "hostNames": [],
+                "requireServerNameIndication": false
               }
             }
           ],
+          "urlPathMaps": [],
           "requestRoutingRules": [
             {
               "Name": "rule1",
@@ -765,12 +783,34 @@
               }
             }
           ],
+          "probes": [
+            {
+                "name": "abchealthprobe",
+                "properties": {
+                    "protocol": "Https",
+                    "host": "rswebappportal.azurewebsites.net",
+                    "path": "/",
+                    "interval": 30,
+                    "timeout": 30,
+                    "unhealthyThreshold": 3,
+                    "pickHostNameFromBackendHttpSettings": false,
+                    "minServers": 0,
+                    "match": {}
+                }
+            }
+        ],
+        "rewriteRuleSets": [],
+        "redirectConfigurations": [],
+        "privateLinkConfigurations": [],
           "webApplicationFirewallConfiguration": {
-            "enabled": "[parameters('wafEnabled')]",
-            "firewallMode": "[parameters('wafMode')]",
-            "ruleSetType": "[parameters('wafRuleSetType')]",
-            "ruleSetVersion": "[parameters('wafRuleSetVersion')]",
-            "disabledRuleGroups": []
+            "enabled": true,
+            "firewallMode": "Detection",
+            "ruleSetType": "OWASP",
+            "ruleSetVersion": "3.0",
+            "disabledRuleGroups": [],
+            "requestBodyCheck": true,
+            "maxRequestBodySizeInKb": 128,
+            "fileUploadLimitInMb": 100
           }
         }
       },
