@@ -740,7 +740,7 @@
               }
             },
             {
-              "name": "appGatewayBackendHttpSettings",
+              "name": "appGatewayBackendHttpsSettings",
               "properties": {
                   "port": 443,
                   "protocol": "Https",
