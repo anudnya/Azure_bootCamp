@@ -20,7 +20,7 @@ steps:
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'AnudnyaSubscription(1)(72b0c16c-df66-4f6c-8293-1c1921fdcad3)'
+    azureResourceManagerConnection: '72b0c16c-df66-4f6c-8293-1c1921fdcad3'
     subscriptionId: '72b0c16c-df66-4f6c-8293-1c1921fdcad3'
     action: 'Create Or Update Resource Group'
     resourceGroupName: 'AnudnyaAzDemo'
