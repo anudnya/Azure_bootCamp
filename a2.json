@@ -394,7 +394,7 @@
             }
           }
         },
-        "resources": [
+  /*      "resources": [
           {
               "type": "extensions",
               "name": "CustomScriptExtension",
@@ -414,9 +414,29 @@
                   }
               }
           }
-      ] 
+      ] */
       },
-
+      {   "type": "Microsoft.Compute/virtualMachines/extensions",
+        "apiVersion": "2019-07-01",
+        "name": "[concat(variables('virtualMachineName2'), '/CustomScriptExtension')]",
+        "location": "centralus",
+        "dependsOn": [
+            "[resourceId('Microsoft.Compute/virtualMachines', variables('virtualMachineName2'))]"
+        ],
+        "properties": {
+            "autoUpgradeMinorVersion": true,
+            "publisher": "Microsoft.Compute",
+            "type": "CustomScriptExtension",
+            "typeHandlerVersion": "1.9",
+            "settings": {
+                "fileUris": [
+                    "https://raw.githubusercontent.com/anudnya/Azure_bootCamp/master/test.ps1"
+                ],
+                "commandToExecute": "[concat('Powershell -ExecutionPolicy Unrestricted -File \"' , 'test.ps1')]"
+            },
+            "protectedSettings": {}
+        }
+    },
       { "name": "[variables('virtualMachineName3')]",
         "type": "Microsoft.Compute/virtualMachines",
         "apiVersion": "2017-03-30",
