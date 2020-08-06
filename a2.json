@@ -393,8 +393,30 @@
               "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('diagStorageAccountName')), '2017-06-01').primaryEndpoints['blob']]"
             }
           }
-        }
+        },
+        "resources": [
+          {
+              "type": "extensions",
+              "name": "CustomScriptExtension",
+              "apiVersion": "2017-03-30",
+              "location": "[resourceGroup().location]",
+              "dependsOn": [ "[variables('virtualMachineName2')]" ],
+              "properties": {
+                  "publisher": "Microsoft.Compute",
+                  "type": "CustomScriptExtension",
+                  "typeHandlerVersion": "1.8",
+                  "autoUpgradeMinorVersion": true,
+                  "settings": {
+                      "fileUris": ["https://raw.githubusercontent.com/anudnya/Azure_bootCamp/master/test.ps1"],
+                      "commandToExecute": "[concat('Powershell -ExecutionPolicy Unrestricted -File \"' , 'test.ps1')]"
+                  },
+                  "protectedSettings": {
+                  }
+              }
+          }
+      ] 
       },
+
       { "name": "[variables('virtualMachineName3')]",
         "type": "Microsoft.Compute/virtualMachines",
         "apiVersion": "2017-03-30",
